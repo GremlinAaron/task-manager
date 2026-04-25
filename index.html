@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1f7a68">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="四象限任务">
+  <title>四象限任务管理器</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section class="topbar" aria-label="任务管理总览">
+      <div>
+        <p class="eyebrow">Eisenhower Matrix</p>
+        <h1>四象限任务管理器</h1>
+      </div>
+      <div class="summary" aria-live="polite">
+        <div>
+          <span id="totalCount">0</span>
+          <small>全部</small>
+        </div>
+        <div>
+          <span id="openCount">0</span>
+          <small>待办</small>
+        </div>
+        <div>
+          <span id="doneCount">0</span>
+          <small>完成</small>
+        </div>
+      </div>
+    </section>
+
+    <section class="workspace">
+      <aside class="project-panel" aria-label="项目列表">
+        <div class="panel-heading">
+          <h2>项目</h2>
+          <span id="projectCount">0</span>
+        </div>
+        <form id="projectForm" class="project-form" autocomplete="off">
+          <input id="projectName" type="text" maxlength="40" placeholder="新项目名称" required>
+          <button class="icon-add" type="submit" aria-label="新增项目">+</button>
+        </form>
+        <nav id="projectList" class="project-list" aria-label="选择项目"></nav>
+      </aside>
+
+      <section class="main-panel">
+        <section class="project-bar" aria-label="当前项目">
+          <div>
+            <p>当前项目</p>
+            <h2 id="currentProjectName">默认项目</h2>
+          </div>
+          <div class="project-actions">
+            <button id="renameProjectBtn" class="ghost-btn" type="button">重命名</button>
+            <button id="deleteProjectBtn" class="ghost-btn danger-text" type="button">删除项目</button>
+          </div>
+        </section>
+
+        <section class="task-input" aria-label="新增任务">
+          <form id="taskForm" autocomplete="off">
+            <div class="field title-field">
+              <label for="taskTitle">任务</label>
+              <input id="taskTitle" name="title" type="text" maxlength="80" placeholder="例如：完成项目周报" required>
+            </div>
+            <div class="field">
+              <label for="taskQuadrant">象限</label>
+              <select id="taskQuadrant" name="quadrant">
+                <option value="important-urgent">重要紧急</option>
+                <option value="important-not-urgent">重要不紧急</option>
+                <option value="urgent-not-important">紧急不重要</option>
+                <option value="not-urgent-not-important">不紧急不重要</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="taskDue">日期</label>
+              <input id="taskDue" name="due" type="date">
+            </div>
+            <button class="primary-btn" type="submit" aria-label="新增任务">
+              <span aria-hidden="true">+</span>
+              新增
+            </button>
+          </form>
+          <div class="filters" role="group" aria-label="任务筛选">
+            <button class="filter active" data-filter="all" type="button">全部</button>
+            <button class="filter" data-filter="open" type="button">待办</button>
+            <button class="filter" data-filter="done" type="button">完成</button>
+          </div>
+        </section>
+
+        <section class="matrix" aria-label="四象限任务面板">
+          <article class="quadrant q1" data-quadrant="important-urgent">
+            <header>
+              <div>
+                <p>先处理</p>
+                <h2>重要紧急</h2>
+              </div>
+              <span class="badge" data-count="important-urgent">0</span>
+            </header>
+            <ul class="task-list" aria-label="重要紧急任务"></ul>
+          </article>
+
+          <article class="quadrant q2" data-quadrant="important-not-urgent">
+            <header>
+              <div>
+                <p>安排时间</p>
+                <h2>重要不紧急</h2>
+              </div>
+              <span class="badge" data-count="important-not-urgent">0</span>
+            </header>
+            <ul class="task-list" aria-label="重要不紧急任务"></ul>
+          </article>
+
+          <article class="quadrant q3" data-quadrant="urgent-not-important">
+            <header>
+              <div>
+                <p>尽量委派</p>
+                <h2>紧急不重要</h2>
+              </div>
+              <span class="badge" data-count="urgent-not-important">0</span>
+            </header>
+            <ul class="task-list" aria-label="紧急不重要任务"></ul>
+          </article>
+
+          <article class="quadrant q4" data-quadrant="not-urgent-not-important">
+            <header>
+              <div>
+                <p>减少投入</p>
+                <h2>不紧急不重要</h2>
+              </div>
+              <span class="badge" data-count="not-urgent-not-important">0</span>
+            </header>
+            <ul class="task-list" aria-label="不紧急不重要任务"></ul>
+          </article>
+        </section>
+      </section>
+
+      <aside class="overview-panel" aria-label="任务全览">
+        <div class="panel-heading">
+          <h2>任务全览</h2>
+          <span id="overviewCount">0</span>
+        </div>
+        <div class="overview-columns">
+          <section>
+            <h3>未完成</h3>
+            <ul id="openOverview" class="overview-list"></ul>
+          </section>
+          <section>
+            <h3>已完成</h3>
+            <ul id="doneOverview" class="overview-list"></ul>
+          </section>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <section id="taskModal" class="modal" aria-hidden="true" aria-label="任务详情">
+    <div class="modal-backdrop" data-close-modal></div>
+    <article class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <header class="modal-header">
+        <div>
+          <p id="modalProjectName">项目</p>
+          <h2 id="modalTitle">任务详情</h2>
+        </div>
+        <button class="icon-btn" type="button" data-close-modal aria-label="关闭窗口">×</button>
+      </header>
+
+      <div class="modal-grid">
+        <label class="field">
+          <span>任务名称</span>
+          <input id="modalTaskTitle" type="text" maxlength="80">
+        </label>
+        <label class="field">
+          <span>象限</span>
+          <select id="modalTaskQuadrant">
+            <option value="important-urgent">重要紧急</option>
+            <option value="important-not-urgent">重要不紧急</option>
+            <option value="urgent-not-important">紧急不重要</option>
+            <option value="not-urgent-not-important">不紧急不重要</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>日期</span>
+          <input id="modalTaskDue" type="date">
+        </label>
+      </div>
+
+      <label class="done-line">
+        <input id="modalTaskDone" type="checkbox">
+        <span>标记为已完成</span>
+      </label>
+
+      <section class="subtask-section">
+        <div class="panel-heading">
+          <h3>子项</h3>
+          <span id="subtaskProgress">0/0</span>
+        </div>
+        <form id="subtaskForm" class="subtask-form" autocomplete="off">
+          <input id="subtaskTitle" type="text" maxlength="80" placeholder="新增子项" required>
+          <button class="primary-btn" type="submit">添加</button>
+        </form>
+        <ul id="subtaskList" class="subtask-list"></ul>
+      </section>
+
+      <footer class="modal-actions">
+        <button id="modalDeleteTask" class="ghost-btn danger-text" type="button">删除任务</button>
+        <button id="modalSaveTask" class="primary-btn" type="button">保存</button>
+      </footer>
+    </article>
+  </section>
+
+  <template id="taskTemplate">
+    <li class="task-card" draggable="true">
+      <label class="check-wrap" aria-label="切换完成状态">
+        <input type="checkbox">
+        <span></span>
+      </label>
+      <button class="task-main" type="button">
+        <strong></strong>
+        <small></small>
+        <time></time>
+      </button>
+      <button class="icon-btn delete-btn" type="button" aria-label="删除任务">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M6 7h12M9 7V5h6v2m-7 3 1 9m6-9-1 9M8 7l1 14h6l1-14" />
+        </svg>
+      </button>
+    </li>
+  </template>
+
+  <template id="overviewTemplate">
+    <li>
+      <button class="overview-title" type="button"></button>
+      <button class="mini-delete" type="button" aria-label="删除任务">删除</button>
+    </li>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>

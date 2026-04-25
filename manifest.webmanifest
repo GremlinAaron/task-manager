@@ -1,0 +1,19 @@
+{
+  "name": "四象限任务管理器",
+  "short_name": "四象限任务",
+  "description": "支持项目、子任务、本地保存的四象限任务管理器。",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f5f7fb",
+  "theme_color": "#1f7a68",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
